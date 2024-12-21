@@ -17,13 +17,14 @@ import {
 import Login from "../components/Login";
 import PopUpContext from "../context/PopUpContext";
 import { useAuth } from "../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import { replace, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { getToken } from "../utils/tokenManager.js";
 
 export default function Home() {
-  const { isAuthenticated } = useAuth();
+  const { authState } = useAuth();
+  const {isAuthenticated} = authState;
   const { showLoginPopup, setShowLoginPopup } = useContext(PopUpContext);
-  const homeApi = `${process.env.REACT_APP_API_URL}/user/home`;
   const [brandData, setBrandData] = useState({});
   const [featuredData, setFeaturedData] = useState({});
   const [offerData, setOfferData] = useState({});
@@ -31,6 +32,23 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState([]);
   const navigate = useNavigate();
+  
+
+  useEffect(() => {
+    const redirectBasedOnToken = async () => {
+      if (getToken("user_auth_token")) {
+      }
+      else if (getToken("business_auth_token")) {
+        navigate("/business", { replace: true });
+      } else if (getToken("admin_auth_token")) {
+        navigate("/admin",  {replace: true});
+      }
+    };
+
+    redirectBasedOnToken();
+  }, [navigate]);
+
+  const homeApi = `${process.env.REACT_APP_API_URL}/user/home`;
 
   const fetchHomeData = async () => {
     try {

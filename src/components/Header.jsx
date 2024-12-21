@@ -7,7 +7,9 @@ import { Link } from "react-router-dom";
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { setShowLoginPopup } = useContext(PopUpContext);
-  const { isAuthenticated } = useAuth();
+  const { authState } = useAuth();
+  const {authType} = authState;
+  let isAuthenticated = authType === 'user';
 
   const handlePopUp = () => {
     setShowLoginPopup(true);

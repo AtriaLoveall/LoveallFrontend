@@ -44,6 +44,9 @@ export const AuthProvider = ({ children }) => {
         if (data.redirectTo === "/") token = 'user_auth_token';
         else if (data.redirectTo === "/business") token = 'business_auth_token';
         else if (data.redirectTo === "/admin") token = 'admin_auth_token';
+        removeToken('user_auth_token');
+        removeToken('business_auth_token');
+        removeToken('admin_auth_token');
         setToken({ rememberMe, auth_token, token});
         setAuthState({
           isAuthenticated: true,
