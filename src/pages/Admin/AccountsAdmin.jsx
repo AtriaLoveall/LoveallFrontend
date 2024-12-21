@@ -12,6 +12,7 @@ const AccountsAdmin = () => {
   const [sortBy, setSortBy] = useState("name");
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [verification, setVerification] = useState(false);
 
   const { authState } = useAuth();
   const { authType, isAuthenticated } = authState;
@@ -43,7 +44,7 @@ const AccountsAdmin = () => {
     if (isAuthenticated) {
       fetchAccounts();
     }
-  }, [isAuthenticated, fetchAccounts]);
+  }, [isAuthenticated, fetchAccounts, verification]);
 
   const handleDetailsClick = async (account) => {
     try {
@@ -69,8 +70,7 @@ const AccountsAdmin = () => {
   };
 
   const verifyBusiness = async ({business_email}) => {
-    console.log('I am in business verification page')
-    console.log(business_email);
+    setVerification(true);
     try {
       const token = getToken('admin_auth_token');
       
@@ -83,10 +83,15 @@ const AccountsAdmin = () => {
         body: JSON.stringify({"business_email": business_email})
       });
       if (!response.ok) {
+        alert("Verification failed");
         throw new Error(`Failed to fetch account details: ${response.status} ${response.statusText}`);
       }
     } catch (err) {
       setError(err.message);
+    }
+    finally {
+      setVerification(false);
+      setShowDetailsModal(false);
     }
   };
 
@@ -261,7 +266,7 @@ const AccountsAdmin = () => {
               </div>
               {accountType === 'business' && selectedAccount.status === 'Pending' && (
                   <button className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-bold text-sm uppercase tracking-wider rounded shadow-md hover:shadow-lg transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" onClick={() => verifyBusiness({business_email: selectedAccount.email})}>
-                  Verify
+                  {verification ? 'Verifying' : 'Verify'}
                 </button>
                 )}
             </div>
