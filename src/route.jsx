@@ -57,7 +57,7 @@ const AppRoute = () => {
       <Route path="/otp-sent" element={<OTPSent />} />
       <Route path="/stores" element={<Offer />} />
       <Route path="/offer/:offer_id" element={<SingleOffer />} />
-      <Route path="/redeem/:offerId" element={<Redeem />} />
+      <Route path="/redeem" element={<Redeem />} />
       <Route path="/about" element={<About />} />
       <Route path="/charity" element={<Charity />} />
       <Route path="/donation" element={<Donation />} />

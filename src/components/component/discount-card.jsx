@@ -3,8 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Discount = ({ detail, style }) => {
   const navigate = useNavigate();
-  const handleRedeem = () => {
-    navigate("/redeem");
+  const handleRedeem = (offerId) => {
+    navigate(`/redeem`, { state: { ...detail } });
   };
   return (
     <div
@@ -21,7 +21,7 @@ const Discount = ({ detail, style }) => {
         <button
           type="button"
           className="text-white justify-self-end rounded-lg bg-[#f24880] p-2"
-          onClick={handleRedeem}
+          onClick={() => handleRedeem(detail.offer_id)}
         >
           Redeem Now
         </button>

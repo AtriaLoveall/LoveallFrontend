@@ -99,10 +99,6 @@ const Offer = () => {
     setIsMobileFilterVisible(!isMobileFilterVisible);
   };
 
-  const handleRedeem = (offerId) => {
-    navigate(`/redeem/${offerId}`);
-  };
-
   return (
     <div id="category-page" className="m-4">
       <div
@@ -265,12 +261,6 @@ const Offer = () => {
               offers.map((offer) => (
                 <div key={offer.offer_id}>
                   <Discount detail={offer} />
-                  <button
-                    onClick={() => handleRedeem(offer.offer_id)}
-                    className="mt-2 w-full bg-[#971132] text-white py-2 rounded-md hover:bg-[#7d0f2a] transition-colors"
-                  >
-                    Redeem Now
-                  </button>
                 </div>
               ))
             ) : (
