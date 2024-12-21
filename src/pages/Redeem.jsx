@@ -8,7 +8,7 @@ const Redeem = () => {
   const [error, setError] = useState('');
   const location = useLocation();
   const offerDetail = location.state || {};
-
+  console.log(offerDetail);
   const token = getToken('user_auth_token');
   const whoami = `${process.env.REACT_APP_API_URL}/auth/whoami`;
 

@@ -63,6 +63,7 @@ export default function TrendingOffers(props) {
                   </p>
                   <Link
                     to='/redeem'
+                    state={{ ...offer }}
                     className="w-full py-3 rounded-full text-white font-semibold transition-transform hover:scale-105 mt-auto"
                     style={{
                       background: 'linear-gradient(90deg, rgba(253,59,132,1) 0%, rgba(255,164,141,1) 100%)'

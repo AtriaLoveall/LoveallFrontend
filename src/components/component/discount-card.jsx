@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 const Discount = ({ detail, style }) => {
   const navigate = useNavigate();
   const handleRedeem = (offerId) => {
-    navigate(`/redeem`, { state: { ...detail } });
+    navigate(`/redeem  `, { state: { ...detail } });
   };
   return (
     <div

@@ -52,9 +52,9 @@ export default function PopularNow(props) {
   if (isLoading) {
     return <div className="text-center py-4">Loading top stores...</div>;
   }
+  console.log(topStores)
 
   if (error) return <div className="text-center py-8 text-red-600">Error: {error.message}. Please check your server connection and try again.</div>;
-
   return (
     <section className="mb-8">
       <h2 className="text-xl font-bold mb-4">Popular Now</h2>

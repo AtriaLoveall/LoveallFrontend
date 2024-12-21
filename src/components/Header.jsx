@@ -12,6 +12,7 @@ export default function Header() {
   let isAuthenticated = authType === 'user';
 
   const handlePopUp = () => {
+    console.log("Pop up showd in Header");
     setShowLoginPopup(true);
   };
 

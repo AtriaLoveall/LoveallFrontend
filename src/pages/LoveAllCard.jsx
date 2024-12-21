@@ -6,7 +6,8 @@ import Login from "../components/Login";
 import { getToken } from "../utils/tokenManager"; // Import the getToken function
 
 export default function LoveAllCard() {
-  const { isAuthenticated } = useAuth();
+  const { authState } = useAuth();
+  const {isAuthenticated} = authState;
   const { showLoginPopup } = useContext(PopUpContext);
   const cardApi = `${process.env.REACT_APP_API_URL}/user/card`;
   const [cardData, setCardData] = useState({});
