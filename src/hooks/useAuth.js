@@ -4,12 +4,28 @@ import { getToken, removeToken, setToken } from "../utils/tokenManager";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(!!getToken('user_auth_token'));
-  const api = process.env.REACT_APP_API_URL;
+  const AUTH_TOKEN_MAP = {
+    user: 'user_auth_token',
+    business: 'business_auth_token',
+    admin: 'admin_auth_token'
+  }
 
+  const getAuthType = () => {
+    for (const [type, token] of Object.entries(AUTH_TOKEN_MAP)) {
+      if (getToken(token)) return type;
+    }
+    return 'other';
+  };
+  
+  const [authState, setAuthState] = useState(() => ({
+    isAuthenticated: Object.values(AUTH_TOKEN_MAP).some(token => !!getToken(token)),
+    authType: getAuthType(),
+  }));
+  
   useEffect(() => {
-    console.log("Authentication: " + isAuthenticated);
-  }, [isAuthenticated]);
+    console.log(`Authentication Type: ${authState.authType}`);
+  }, [authState.authType]);
+  const api = process.env.REACT_APP_API_URL;
 
   const login = async ({ email, password, otp, rememberMe }) => {
     const loginApi = api + "/auth/login";
@@ -29,7 +45,10 @@ export const AuthProvider = ({ children }) => {
         else if (data.redirectTo === "/business") token = 'business_auth_token';
         else if (data.redirectTo === "/admin") token = 'admin_auth_token';
         setToken({ rememberMe, auth_token, token});
-        setIsAuthenticated(true);
+        setAuthState({
+          isAuthenticated: true,
+          authType: getAuthType(), // Re-check authType after login
+        });
       }
       return { message: data.message, redirectTo: data.redirectTo, success: data.success };
     } catch (error) {
@@ -44,7 +63,10 @@ export const AuthProvider = ({ children }) => {
     else if (type === 'business') token = 'business_auth_token';
     else if (type === 'admin') token = 'admin_auth_token';
     removeToken(token);
-    setIsAuthenticated(false);
+    setAuthState({
+      isAuthenticated: false,
+      authType: 'other', // Default to 'other' after logout
+    });
   };
 
   const register = async (payload) => {
@@ -106,7 +128,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, register, sendOtp }}>
+    <AuthContext.Provider value={{ authState, login, logout, register, sendOtp }}>
       {children}
     </AuthContext.Provider>
   );

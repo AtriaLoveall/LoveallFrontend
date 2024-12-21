@@ -12,8 +12,8 @@ const TransactionsAdmin = () => {
     storeId: '',
     status: ''
   });
-
-  const { isAuthenticated } = useAuth();
+  const { authState } = useAuth();
+  const { isAuthenticated } = authState;
   const api = process.env.REACT_APP_API_URL;
 
   const fetchTransactions = useCallback(async () => {

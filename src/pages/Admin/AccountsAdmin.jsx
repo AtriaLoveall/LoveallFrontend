@@ -13,9 +13,9 @@ const AccountsAdmin = () => {
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
 
-  const { isAuthenticated } = useAuth();
+  const { authState } = useAuth();
+  const { authType, isAuthenticated } = authState;
   const api = process.env.REACT_APP_API_URL;
-
   const fetchAccounts = useCallback(async () => {
     try {
       const token = getToken('admin_auth_token');
@@ -44,9 +44,6 @@ const AccountsAdmin = () => {
       fetchAccounts();
     }
   }, [isAuthenticated, fetchAccounts]);
-  useEffect(() => {
-    console.log(selectedAccount);
-  }, [selectedAccount])
 
   const handleDetailsClick = async (account) => {
     try {
