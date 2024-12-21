@@ -11,7 +11,7 @@ const Sidebar = () => {
     >
       <div className="p-6 text-center font-bold text-2xl">LoveAll</div>
       <nav className="flex flex-col p-4 space-y-6 mt-8">
-        <NavLink to="/business/summary" className={({ isActive }) => `p-2 rounded ${isActive ? "bg-[#971132]" : ""}`}>Summary</NavLink>
+        <NavLink to="/business" className={({ isActive }) => `p-2 rounded ${isActive ? "bg-[#971132]" : ""}`} end>Summary</NavLink>
         <NavLink to="/business/transactions" className={({ isActive }) => `p-2 rounded ${isActive ? "bg-[#971132]" : ""}`}>Transactions</NavLink>
         {/* <NavLink to="/business/analytics" className={({ isActive }) => `p-2 rounded ${isActive ? "bg-[#971132]" : ""}`}>Analytics</NavLink> */}
         <NavLink to="/business/offers" className={({ isActive }) => `p-2 rounded ${isActive ? "bg-[#971132]" : ""}`}>Your Offers</NavLink>

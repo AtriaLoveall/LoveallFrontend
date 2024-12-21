@@ -5,6 +5,7 @@ import { Pie } from 'react-chartjs-2'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import { Star, Search, Calendar } from 'lucide-react'
 import { getToken } from '../../utils/tokenManager'
+import { useNavigate } from 'react-router-dom'
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
@@ -27,14 +28,16 @@ const CustomerFeedback = () => {
   const [error, setError] = useState(null)
   const [ratingFilter, setRatingFilter] = useState('')
   const [dateFilter, setDateFilter] = useState('')
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchFeedbackData = async () => {
       try {
         const token = getToken('business_auth_token')
         if (!token) {
+          navigate('/', { replace: true })
           throw new Error('No authentication token found')
-        }
+        };
 
         const response = await fetch(`${process.env.REACT_APP_API_URL}/business/feedback`, {
           method: 'GET',

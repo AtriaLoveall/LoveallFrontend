@@ -42,7 +42,7 @@ const AppRoute = () => {
   return (
     <Routes>
       <Route path="/business" element={<Business />}>
-        <Route path="summary" element={<BusinessDashboard />} />
+        <Route index element={<BusinessDashboard />} />
         <Route path="profile" element={<BusinessProfile />} />
         <Route path="offers" element={<YourOffers />} />
         <Route path="analytics" element={<Analytics />} />

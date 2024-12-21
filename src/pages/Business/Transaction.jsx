@@ -15,12 +15,13 @@ const Transaction = () => {
   const [filter, setFilter] = useState('all');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { isAuthenticated } = useAuth();
+  const {authState} = useAuth();
+  const { isAuthenticated } = authState;
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!isAuthenticated) {
-      navigate("/business/login");
+      navigate('/', { replace: true });
     } else {
       fetchTransactions();
     }
@@ -30,6 +31,7 @@ const Transaction = () => {
     try {
       const token = getToken('business_auth_token');
       if (!token) {
+        navigate('/', { replace: true });
         throw new Error('No authentication token found');
       }
 
