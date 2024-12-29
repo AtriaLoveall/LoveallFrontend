@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { getToken } from "../../utils/tokenManager";
-import { ChevronUp, ChevronDown, X, ArrowLeft } from 'lucide-react';
+import { ChevronUp, ChevronDown, X, ArrowLeft } from "lucide-react";
 
 const AccountsAdmin = () => {
   const [accountType, setAccountType] = useState("business"); // "business" or "user"
@@ -19,20 +19,23 @@ const AccountsAdmin = () => {
   const api = process.env.REACT_APP_API_URL;
   const fetchAccounts = useCallback(async () => {
     try {
-      const token = getToken('admin_auth_token');
-      const endpoint = accountType === 'business' ? 'business-accounts' : 'user-accounts';
+      const token = getToken("admin_auth_token");
+      const endpoint =
+        accountType === "business" ? "business-accounts" : "user-accounts";
       const response = await fetch(`${api}/admin/${endpoint}`, {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       if (!response.ok) {
-        throw new Error(`Failed to fetch accounts: ${response.status} ${response.statusText}`);
+        throw new Error(
+          `Failed to fetch accounts: ${response.status} ${response.statusText}`
+        );
       }
 
       const data = await response.json();
-      setAccounts(accountType === 'business' ? data.businesses : data.users);
+      setAccounts(accountType === "business" ? data.businesses : data.users);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -48,50 +51,85 @@ const AccountsAdmin = () => {
 
   const handleDetailsClick = async (account) => {
     try {
-      const token = getToken('admin_auth_token');
-      const endpoint = accountType === 'business' ? 'business-accounts' : 'user-accounts';
-      const id = accountType === 'business' ? account.business_id : account.user_id;
-      
+      const token = getToken("admin_auth_token");
+      const endpoint =
+        accountType === "business" ? "business-accounts" : "user-accounts";
+      const id =
+        accountType === "business" ? account.business_id : account.user_id;
+
       const response = await fetch(`${api}/admin/${endpoint}/${id}`, {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
       if (!response.ok) {
-        throw new Error(`Failed to fetch account details: ${response.status} ${response.statusText}`);
+        throw new Error(
+          `Failed to fetch account details: ${response.status} ${response.statusText}`
+        );
       }
 
       const data = await response.json();
-      setSelectedAccount(accountType === 'business' ? data.business : data.user);
+      setSelectedAccount(
+        accountType === "business" ? data.business : data.user
+      );
       setShowDetailsModal(true);
     } catch (err) {
       setError(err.message);
     }
   };
 
-  const verifyBusiness = async ({business_email}) => {
+  const verifyBusiness = async ({ business_email }) => {
     setVerification(true);
     try {
-      const token = getToken('admin_auth_token');
-      
+      const token = getToken("admin_auth_token");
+
       const response = await fetch(`${api}/admin/manual-verification`, {
         method: "POST",
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({"business_email": business_email})
+        body: JSON.stringify({ business_email: business_email }),
       });
       if (!response.ok) {
         alert("Verification failed");
-        throw new Error(`Failed to fetch account details: ${response.status} ${response.statusText}`);
+        throw new Error(
+          `Failed to fetch account details: ${response.status} ${response.statusText}`
+        );
       }
     } catch (err) {
       setError(err.message);
-    }
-    finally {
+    } finally {
       setVerification(false);
       setShowDetailsModal(false);
+    }
+  };
+
+  const handleRemoveBusiness = async (businessEmail) => {
+    try {
+      const token = getToken("admin_auth_token");
+
+      const response = await fetch(`${api}/admin/remove-business`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ business_email: businessEmail }),
+      });
+
+      if (!response.ok) {
+        alert("Failed to remove business");
+        throw new Error(
+          `Failed to remove business: ${response.status} ${response.statusText}`
+        );
+      }
+
+      alert("Business removed successfully");
+      setShowDetailsModal(false);
+      fetchAccounts(); // Refresh the accounts list
+    } catch (err) {
+      setError(err.message);
     }
   };
 
@@ -137,7 +175,9 @@ const AccountsAdmin = () => {
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
             >
-              <option value="name">{accountType === 'business' ? 'Business Name' : 'Name'}</option>
+              <option value="name">
+                {accountType === "business" ? "Business Name" : "Name"}
+              </option>
               <option value="email">Email</option>
               <option value="status">Status</option>
             </select>
@@ -151,7 +191,7 @@ const AccountsAdmin = () => {
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   <div className="flex items-center gap-1">
-                    {accountType === 'business' ? 'Business Name' : 'Name'}
+                    {accountType === "business" ? "Business Name" : "Name"}
                     <div className="flex flex-col">
                       <ChevronUp className="h-3 w-3" />
                       <ChevronDown className="h-3 w-3" />
@@ -161,7 +201,7 @@ const AccountsAdmin = () => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   E-mail
                 </th>
-                {accountType === 'user' && (
+                {accountType === "user" && (
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Phone Number
                   </th>
@@ -179,14 +219,22 @@ const AccountsAdmin = () => {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {accounts.map((account) => (
-                <tr key={accountType === 'business' ? account.business_id : account.user_id}>
+                <tr
+                  key={
+                    accountType === "business"
+                      ? account.business_id
+                      : account.user_id
+                  }
+                >
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {accountType === 'business' ? account.business_name : account.name}
+                    {accountType === "business"
+                      ? account.business_name
+                      : account.name}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {account.email}
                   </td>
-                  {accountType === 'user' && (
+                  {accountType === "user" && (
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {account.phone_number}
                     </td>
@@ -197,7 +245,8 @@ const AccountsAdmin = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
                       className={`px-2 py-1 text-xs rounded-full ${
-                        account.status === "Approved" || account.status === "Verified"
+                        account.status === "Approved" ||
+                        account.status === "Verified"
                           ? "bg-green-100 text-green-800"
                           : "bg-yellow-100 text-yellow-800"
                       }`}
@@ -231,7 +280,9 @@ const AccountsAdmin = () => {
               >
                 <ArrowLeft size={24} />
               </button>
-              <h2 className="text-xl font-bold text-center w-full">Account Details</h2>
+              <h2 className="text-xl font-bold text-center w-full">
+                Account Details
+              </h2>
               <button
                 onClick={() => setShowDetailsModal(false)}
                 className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
@@ -242,33 +293,61 @@ const AccountsAdmin = () => {
             <div className="space-y-4 mt-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  {accountType === 'business' ? 'Business Name' : 'Name'}
+                  {accountType === "business" ? "Business Name" : "Name"}
                 </label>
-                <p className="mt-1">{accountType === 'business' ? selectedAccount.business_name : selectedAccount.name}</p>
+                <p className="mt-1">
+                  {accountType === "business"
+                    ? selectedAccount.business_name
+                    : selectedAccount.name}
+                </p>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Email</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Email
+                </label>
                 <p className="mt-1">{selectedAccount.email}</p>
               </div>
-              {accountType === 'user' && (
+              {accountType === "user" && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Phone Number</label>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Phone Number
+                  </label>
                   <p className="mt-1">{selectedAccount.phone_number}</p>
                 </div>
               )}
               <div>
-                <label className="block text-sm font-medium text-gray-700">Status</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Status
+                </label>
                 <p className="mt-1">{selectedAccount.status}</p>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Registration Date</label>
-                <p className="mt-1">{new Date(selectedAccount.registered_date).toLocaleDateString()}</p>
+                <label className="block text-sm font-medium text-gray-700">
+                  Registration Date
+                </label>
+                <p className="mt-1">
+                  {new Date(
+                    selectedAccount.registered_date
+                  ).toLocaleDateString()}
+                </p>
               </div>
-              {accountType === 'business' && selectedAccount.status === 'Pending' && (
-                  <button className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-bold text-sm uppercase tracking-wider rounded shadow-md hover:shadow-lg transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" onClick={() => verifyBusiness({business_email: selectedAccount.email})}>
-                  {verification ? 'Verifying' : 'Verify'}
-                </button>
+              {accountType === "business" &&
+                selectedAccount.status === "Pending" && (
+                  <button
+                    className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-bold text-sm uppercase tracking-wider rounded shadow-md hover:shadow-lg transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                    onClick={() =>
+                      verifyBusiness({ business_email: selectedAccount.email })
+                    }
+                  >
+                    {verification ? "Verifying" : "Verify"}
+                  </button>
                 )}
+              <button
+                onClick={() => handleRemoveBusiness(selectedAccount.email)}
+                className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 mt-4 w-full"
+              >
+                Remove Business
+              </button>
             </div>
           </div>
         </div>
@@ -278,4 +357,3 @@ const AccountsAdmin = () => {
 };
 
 export default AccountsAdmin;
-
